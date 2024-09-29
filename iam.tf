@@ -15,14 +15,14 @@ resource "aws_iam_role" "GithubActionsRole" {
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:MarkKulUa/rsschool-devops-course-tasks:*"
+          "token.actions.githubusercontent.com:sub": "repo:${var.github_org}/${var.github_repo}:*"
         }
       }
     }
   ]
 }
 EOF
-  }
+}
 
 resource "aws_iam_role_policy_attachment" "GithubActionsRolePolicies" {
   for_each = toset([
@@ -42,7 +42,6 @@ resource "aws_iam_role_policy_attachment" "GithubActionsRolePolicies" {
 resource "aws_iam_openid_connect_provider" "GitHubProvider" {
   url = "https://token.actions.githubusercontent.com"
 
-  client_id_list = ["sts.amazonaws.com"]
-
-  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+  client_id_list   = ["sts.amazonaws.com"]
+  thumbprint_list  = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
