@@ -50,7 +50,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Добавлено разрешение id-token для аутентификации через OIDC
+      id-token: write
       contents: read
     steps:
       - uses: actions/checkout@v3
