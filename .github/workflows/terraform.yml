@@ -21,6 +21,9 @@ jobs:
   terraform-plan:
     needs: terraform-fmt
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v3
 
@@ -46,6 +49,9 @@ jobs:
     needs: terraform-plan
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Добавлено разрешение id-token для аутентификации через OIDC
+      contents: read
     steps:
       - uses: actions/checkout@v3
 
@@ -54,6 +60,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GithubActionsRole
           aws-region: eu-central-1
+          role-session-name: github-action-session
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
