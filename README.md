@@ -347,6 +347,7 @@ This command should execute without errors, displaying a summary of the infrastr
 
 2. Verify that the Terraform Apply step completes successfully, indicating the infrastructure is applied as intended.
 
+
 ### Summary
 
 - **AWS CLI and Terraform** are successfully installed and configured.
