@@ -10,19 +10,20 @@ resource "aws_iam_role" "GithubActionsRole" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "${aws_iam_openid_connect_provider.GitHubProvider.arn}"
+        "Federated": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:MarkKulUa/rsschool-devops-course-tasks:*"
+          "token.actions.githubusercontent.com:sub": "repo:${var.github_org}/${var.github_repo}:*"
         }
       }
     }
   ]
 }
 EOF
-  }
+
+}
 
 resource "aws_iam_role_policy_attachment" "GithubActionsRolePolicies" {
   for_each = toset([
@@ -42,7 +43,6 @@ resource "aws_iam_role_policy_attachment" "GithubActionsRolePolicies" {
 resource "aws_iam_openid_connect_provider" "GitHubProvider" {
   url = "https://token.actions.githubusercontent.com"
 
-  client_id_list = ["sts.amazonaws.com"]
-
+  client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
