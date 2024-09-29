@@ -10,18 +10,19 @@ resource "aws_iam_role" "GithubActionsRole" {
     {
       "Effect": "Allow",
       "Principal": {
-        "Federated": "arn:aws:iam::126906356792:oidc-provider/token.actions.githubusercontent.com"
+        "Federated": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
       },
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:MarkKulUa/rsschool-devops-course-tasks:*"
+          "token.actions.githubusercontent.com:sub": "repo:${var.github_org}/${var.github_repo}:*"
         }
       }
     }
   ]
 }
 EOF
+
 }
 
 resource "aws_iam_role_policy_attachment" "GithubActionsRolePolicies" {
